@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+                                 http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+             version="1.0">
+ 
+    <persistence-unit name="COLIBRI" >
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+ 
+        <properties>
+      <property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+      <property name="javax.persistence.jdbc.url"    value="jdbc:sqlserver://ems-t:1433;databaseName=rms_test" />
+      <property name="javax.persistence.jdbc.user" value="rsa" />
+      <property name="javax.persistence.jdbc.password" value="xerbutr" />
+      <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
+      <property name="show_sql" value="true"/>
+     
+        </properties>
+   </persistence-unit>
+</persistence>
