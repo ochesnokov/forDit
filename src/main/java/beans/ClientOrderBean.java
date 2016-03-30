@@ -13,6 +13,7 @@ import javax.persistence.Table;
 @Table(name = "dbo.tClientOrder")
 public class ClientOrderBean {
 
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ClientOrderId")
