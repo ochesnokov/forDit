@@ -114,7 +114,7 @@
 			<br>
 			<p><button id="slide" href="#">Показать детализацию</button></p>
 			<br>
-			<table border="1" width="100%" id="slideTable">
+			<table border="1" width="100%" id="slideTable"  style="display:none">
 				<tr>
 					<td width="10%" class="tablecent"><b><c:out
 								value="Задача " /></b></td>
