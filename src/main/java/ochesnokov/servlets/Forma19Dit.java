@@ -6,69 +6,70 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import beans.ClientOrderBean;
 import beans.Users;
 import ochesnokov.general.WorkDataBase;
 
-@WebServlet(name = "TestServlet1", urlPatterns = { "/TestServlet1" })
-public class TestServlet extends HttpServlet {
+/**
+ * Servlet implementation class Forma19Dit
+ */
+@WebServlet("/Forma19Dit")
+public class Forma19Dit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+  
 	WorkDataBase wdb = WorkDataBase.getInstance();
+	
+    public Forma19Dit() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	public TestServlet() {
-		super();
-		
-	}
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 
-		String myUserParam = (String) request.getParameter("thisUser");
+		
 		String startDate = request.getParameter("dateStart");
 		String finishDate = request.getParameter("dateFinish");
 
-		int myUser = Integer.parseInt(myUserParam);
-
-		// Получаем список сотрудников из jsp
-		
-		List<Users> first = wdb.em.createNativeQuery(
-				"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE [ccr].[CltCltRelationID] ="
-						+ myUser + " ",
+		// Получаем список тестировщиков дит
+		List<Users> users = wdb.em.createNativeQuery(
+				"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE [ccr].[f_DepartmentID] = 944 AND [u].[Flag] = 0 AND [u].[ProfileID] = 1",
 				Users.class).getResultList();
+
+		List<ClientOrderBean> allNseKop = new ArrayList<ClientOrderBean>();
+		List<ClientOrderBean> allNseKopTime = new ArrayList<ClientOrderBean>();
+		for(Users user : users){
+			allNseKopTime.clear();
+			allNseKopTime = wdb.em.createNativeQuery(
+					"SELECT * FROM [dbo].[tClientOrder] WHERE  [InDateTime] > '" + startDate + "' and  [InDateTime] < '"
+							+ finishDate
+							+ "' and [ClientInstrumentID] = 28 and [Status] !=8 and [TaskID]  IN (SELECT [AppModuleTaskID] from [dbo].[tResponsiblePerson] rp inner JOIN [dbo].[tAppModuleTask] amt ON amt.[AppModuleTaskID] = [rp].[ObjectID] where [rp].[EmployeeID] = "
+							+ user.getId() + " and [rp].[RoleID] = 3 and [amt].[Status] !=0  and [amt].[Status] != 2)",
+					ClientOrderBean.class).getResultList();
+			allNseKop.addAll(allNseKopTime);
+		}
+		
 		List<ClientOrderBean> allNse = new ArrayList<ClientOrderBean>();
 		
 		// Получаем список ошибок Дит c копиями
-		List<ClientOrderBean> allNseKop = wdb.em.createNativeQuery(
-				"SELECT * FROM [dbo].[tClientOrder] WHERE  [InDateTime] > '" + startDate + "' and  [InDateTime] < '"
-						+ finishDate
-						+ "' and [ClientInstrumentID] = 28 and [Status] !=8 and [TaskID]  IN (SELECT [AppModuleTaskID] from [dbo].[tResponsiblePerson] rp inner JOIN [dbo].[tAppModuleTask] amt ON amt.[AppModuleTaskID] = [rp].[ObjectID] where [rp].[EmployeeID] = "
-						+ myUser + " and [rp].[RoleID] = 3 and [amt].[Status] !=0  and [amt].[Status] != 2)",
-				ClientOrderBean.class).getResultList();
-
+		
 		for(ClientOrderBean cob : allNseKop){
 			if(cob.getId() == cob.getParentCo() && cob.getStateId() != 359 && cob.getStateId() != 360 ){
 				allNse.add(cob);
 			}
 		}
 		
-		
-		String nameUser = first.get(0).getName();
-		int userId = (int) first.get(0).getId();
-		
-		// Получаем список тестировщиков Дит
-		List<Users> users = wdb.em.createNativeQuery(
-				"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE [ccr].[f_DepartmentID] = 944 AND [u].[Flag] = 0 AND [u].[ProfileID] = 1",
-				Users.class).getResultList();
-
 		Collections.sort(allNse, new Comparator<ClientOrderBean>() {
 			public int compare(ClientOrderBean o1, ClientOrderBean o2) {
 
@@ -81,6 +82,7 @@ public class TestServlet extends HttpServlet {
 		
 		// находим сотрудников департаментов
 		int[] depDit = { 938, 1141, 939, 940, 1961, 2119, 944, 945, 1722, 1723, 1724, 1725, 1727, 1121, 2116, 2118 };
+		
 		List<Users> allUser = wdb.em.createNativeQuery(
 				"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE  [f_IsActive] = 2",
 				Users.class).getResultList();
@@ -160,8 +162,7 @@ public class TestServlet extends HttpServlet {
 		}
 		String formattedDouble = new DecimalFormat("#0.00").format(kpi);
 
-		request.setAttribute("userId", userId);
-		request.setAttribute("nameUser", nameUser);
+		
 		request.setAttribute("clientOrder", allNse);
 		request.setAttribute("sizeCo", alNse);
 		request.setAttribute("users", users);
@@ -172,7 +173,7 @@ public class TestServlet extends HttpServlet {
 		request.setAttribute("kolDitNseFirst", kolDitNseFirst);
 		request.setAttribute("kpi", formattedDouble);
 
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/forma19User.jsp");
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/forma19Dit.jsp");
 		if (dispatcher != null) {
 
 			dispatcher.forward(request, response);
@@ -180,6 +181,10 @@ public class TestServlet extends HttpServlet {
 		}
 
 		
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 
 }
