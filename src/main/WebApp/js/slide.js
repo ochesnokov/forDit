@@ -1,8 +1,8 @@
 
 $(document).ready(function() {
-	var flag = true;
+	var flag = false;
 	$("#slide").click(function() {
-		if (flag == false)
+		if (flag == true)
 
 		{
 
