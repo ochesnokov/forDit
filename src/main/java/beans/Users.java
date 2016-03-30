@@ -17,6 +17,7 @@ public class Users {
 	private long id;
 
 	@Column(name = "f_DepartmentID")
+	
 	private int departament;
 
 	@Column(name = "UserID")

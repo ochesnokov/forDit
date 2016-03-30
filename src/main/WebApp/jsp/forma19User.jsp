@@ -42,12 +42,8 @@
 				<ul>
 					<li><a href="index.jsp"><i class="icons"
 							style="background: url(images/glavnaya.png) no-repeat"></i>Главная</a></li>
-					<li><a href="TestServlet2" method="POST"><i class="icons"
-							style="background: url(images/novosti.png) no-repeat"></i>Форма
-							19</a></li>
-					<li><a href=""><i class="icons"
-							style="background: url(images/stati.png) no-repeat"></i>Расчет
-							плотности</a></li>
+					<li><a href="TestServlet2" method="POST"><i class="icons" style="background: url(images/novosti.png) no-repeat"></i>Форма 19 (сотрудники)</a></li>
+				<li><a href="Forma19Dit"><i class="icons" style="background: url(images/stati.png) no-repeat"></i>Форма 19 (отдел)</a></li>
 					<li><a href="#"><i class="icons"
 							style="background: url(images/free.png) no-repeat"></i></a></li>
 					<li><a href="#"><i class="icons"

@@ -39,7 +39,7 @@ public class TestServlet2 extends HttpServlet {
 
 		request.setAttribute("users", users);
 
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/plotnost.jsp");
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/forma19User.jsp");
 		if (dispatcher != null) {
 
 			dispatcher.forward(request, response);
