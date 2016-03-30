@@ -14,6 +14,7 @@ import javax.persistence.Table;
 public class ClientOrderBean {
 
 	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ClientOrderId")
