@@ -45,6 +45,7 @@ public class TestServlet extends HttpServlet {
 						+ myUser + " ",
 				Users.class).getResultList();
 		List<ClientOrderBean> allNse = new ArrayList<ClientOrderBean>();
+		
 		// Получаем список ошибок Дит c копиями
 		List<ClientOrderBean> allNseKop = wdb.em.createNativeQuery(
 				"SELECT * FROM [dbo].[tClientOrder] WHERE  [InDateTime] > '" + startDate + "' and  [InDateTime] < '"
