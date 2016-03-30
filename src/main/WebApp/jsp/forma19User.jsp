@@ -7,6 +7,8 @@
 <head>
 <title>forDit</title>
 <meta charset="UTF-8">
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/slide.js"></script>
 <link href="styles/style.css" rel="stylesheet" type="text/css">
 <script src="main.js"></script>
 </head>
@@ -102,9 +104,9 @@
 		
 			</table>
 	<br><br>
-	<p>Детализация</p>
+	<p><button id="slide" href="#">Показать детализацию</button></p>
 	<br>
-			<table border="1" width="100%">
+			<table border="1" width="100%" id = "slideTable">
 				<tr>
 					<td width="10%" class="tablecent"><b><c:out
 								value="Задача " /></b></td>
