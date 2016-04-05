@@ -37,9 +37,9 @@
 		<div class="sb_nav">	
 			<ul>
 				<li><a href="index.jsp"><i class="icons" style="background: url(images/glavnaya.png) no-repeat"></i>Главная</a></li>
-				<li><a href="TestServlet2" method="POST"><i class="icons" style="background: url(images/novosti.png) no-repeat"></i>Форма 19 (сотрудники)</a></li>
+				<li><a href="Forma19UserStart" method="POST"><i class="icons" style="background: url(images/novosti.png) no-repeat"></i>Форма 19 (сотрудники)</a></li>
 				<li><a href="Forma19Dit"><i class="icons" style="background: url(images/stati.png) no-repeat"></i>Форма 19 (отдел)</a></li>
-				<li><a href="#"><i class="icons" style="background: url(images/free.png) no-repeat"></i></a></li>
+				<li><a href="PlotnostUserStart"><i class="icons" style="background: url(images/free.png) no-repeat"></i>Плотность</a></li>
 				<li><a href="#"><i class="icons" style="background: url(images/smeshno.png) no-repeat"></i></a></li>
 				<li><a href="#"><i class="icons" style="background: url(images/glavnaya.png) no-repeat"></i>Element</a></li>
 				<li><a href="#"><i class="icons" style="background: url(images/free.png) no-repeat"></i>Element</a></li>
@@ -52,7 +52,7 @@
 	<br>
 	<br>	
 	<p>
-
+		
 
 	</p>
 		

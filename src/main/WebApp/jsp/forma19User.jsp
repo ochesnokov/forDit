@@ -8,7 +8,7 @@
 <title>forDit</title>
 <meta charset="UTF-8">
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script type="text/javascript" src="js/slide.js"></script>
+<script type="text/javascript" src="JS/slide.js"></script>
 <link href="styles/style.css" rel="stylesheet" type="text/css">
 <script src="main.js"></script>
 </head>
@@ -44,10 +44,12 @@
 				<ul>
 					<li><a href="index.jsp"><i class="icons"
 							style="background: url(images/glavnaya.png) no-repeat"></i>Главная</a></li>
-					<li><a href="TestServlet2" method="POST"><i class="icons" style="background: url(images/novosti.png) no-repeat"></i>Форма 19 (сотрудники)</a></li>
-				<li><a href="Forma19Dit"><i class="icons" style="background: url(images/stati.png) no-repeat"></i>Форма 19 (отдел)</a></li>
-					<li><a href="#"><i class="icons"
-							style="background: url(images/free.png) no-repeat"></i></a></li>
+					<li><a href="Forma19UserStart" method="POST"><i class="icons" 
+							style="background: url(images/novosti.png) no-repeat"></i>Форма 19 (сотрудники)</a></li>
+					<li><a href="Forma19Dit"><i class="icons" 
+							style="background: url(images/stati.png) no-repeat"></i>Форма 19 (отдел)</a></li>
+					<li><a href="PlotnostUserStart"><i class="icons" 
+							style="background: url(images/free.png) no-repeat"></i>Плотность</a></li>
 					<li><a href="#"><i class="icons"
 							style="background: url(images/smeshno.png) no-repeat"></i></a></li>
 					<li><a href="#"><i class="icons"
@@ -65,7 +67,7 @@
 			<div width="1000"><p class="headerP">Форма №19, KPI Эффективность тестирования</p></div>
 			<br>
 
-			<form action="TestServlet1" method="GET">
+			<form action="Forma19User" method="GET">
 				<select size="1" name="thisUser" onchange="">
 					<option selected name="tUser" value="${userId}"><c:out
 							value="${nameUser}" /></option>

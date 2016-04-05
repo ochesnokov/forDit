@@ -10,27 +10,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import beans.ClientOrderBean;
+import beans.Period;
 import beans.Users;
 import ochesnokov.general.WorkDataBase;
 
 /**
- * Servlet implementation class TestServlet2
+ * Servlet implementation class PlotnostUser
  */
-@WebServlet(name = "TestServlet2", urlPatterns = { "/TestServlet2" })
-public class TestServlet2 extends HttpServlet {
+@WebServlet("/PlotnostUserStart")
+public class PlotnostUserStart extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
 	WorkDataBase wdb = WorkDataBase.getInstance();
+    public PlotnostUserStart() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	public TestServlet2() {
-		super();
-
-	}
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 
 		List<Users> users = wdb.em.createNativeQuery(
@@ -38,20 +35,23 @@ public class TestServlet2 extends HttpServlet {
 				Users.class).getResultList();
 
 		request.setAttribute("users", users);
+		
+		
+		
+		List<Period> periods = wdb.em.createNativeQuery("SELECT * FROM [dbo].[tObjectivePeriod] WHERE [IsQuarter] = 1 and [PeriodStartDate] > '20150101'  ORDER BY [ObjectivePeriodID]", Period.class).getResultList();
 
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/forma19User.jsp");
+		request.setAttribute("periods", periods);
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/plotnostUser.jsp");
 		if (dispatcher != null) {
 
 			dispatcher.forward(request, response);
-
 		}
-
 	}
 
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 
 }

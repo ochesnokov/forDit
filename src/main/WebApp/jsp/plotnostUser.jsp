@@ -42,15 +42,13 @@
 			</div>
 			<div class="sb_nav">
 				<ul>
-					<li><a href="index.jsp"><i class="icons"
+					<li><a href="index.jsp"><i class="icons" 
 							style="background: url(images/glavnaya.png) no-repeat"></i>Главная</a></li>
-					<li><a href="Forma19UserStart" method="POST"><i class="icons"
-							style="background: url(images/novosti.png) no-repeat"></i>Форма
-							19 (сотрудники)</a></li>
-					<li><a href="Forma19Dit"><i class="icons"
-							style="background: url(images/stati.png) no-repeat"></i>Форма 19
-							(отдел)</a></li>
-					<li><a href="PlotnostUserStart"><i class="icons" 
+					<li><a href="Forma19UserStart" method="POST"><i class="icons" 
+							style="background: url(images/novosti.png) no-repeat"></i>Форма 19 (сотрудники)</a></li>
+					<li><a href="Forma19Dit"><i class="icons" 
+							style="background: url(images/stati.png) no-repeat"></i>Форма 19 (отдел)</a></li>
+					<li><a href="PlotnostUserStart"><i class="icons"
 							style="background: url(images/free.png) no-repeat"></i>Плотность</a></li>
 					<li><a href="#"><i class="icons"
 							style="background: url(images/smeshno.png) no-repeat"></i></a></li>
@@ -66,55 +64,53 @@
 		</div>
 		<div id="content">
 			<br> <br>
-			<div width="1000">
-				<p class="headerP">Форма №19, KPI Эффективность тестирования</p>
-				<p class="headerP">Отдел тестирования.</p>
-			</div>
+			<div width="1000"><p class="headerP">Расчет плотности ошибок.</p></div>
 			<br>
 
-			<form action="Forma19Dit" method="GET">
-				<input type="date" name="dateStart" value="${dateStart}" /> <input
+			<form action="PlotnostUser" method="GET">
+				
+				
+				<select size="1" name="thisUser" onchange="">
+					<option selected name="tUser" value="${userId}"><c:out
+							value="${nameUser}" /></option>
+					<c:forEach items="${users}" var="user">
+						<option value="<c:out value="${user.id}" />"><c:out
+								value="${user.name}" /></option>
+					</c:forEach>
+				</select> <input type="date" name="dateStart" value="${dateStart}" /> <input
 					type="date" name="dateFinish" value="${dateFinish}" /> <input
 					type="submit" name="submit" value="отправить" />
 
 			</form>
-
+			
 			<br>
-
-
+			
+			
 			<table border="1" width="100%">
 				<tr>
 					<td width="10%" class="tablecent"><b><c:out
 								value="Всего ошибок " /></b></td>
 					<td width="25%" class="tablecent"><b><c:out
 								value="Количество внешних ошибок " /></b></td>
-					<td width="25%" class="tablecent"><b><c:out
-								value="Количество ошибок 1 приоритета " /></b></td>
-					<td width="25%" class="tablecent"><b><c:out
-								value="Количество внешних ошибок 1 приоритета " /></b></td>
+					<td width="25%" class="tablecent"><b><c:out value="Количество ошибок 1 приоритета " /></b></td>
+					<td width="25%" class="tablecent"><b><c:out value="Количество внешних ошибок 1 приоритета " /></b></td>
 					<td width="15%" class="tablecent"><b><c:out
 								value="KPI тестирования " /></b></td>
 				</tr>
 				<tr>
-					<td width="10%" class="tableText"><b><c:out
-								value="${sizeCo}  " /></b></td>
-					<td width="25%" class="tableText"><b><c:out
-								value="${clientNseSize} " /></b></td>
-					<td width="25%" class="tableText"><b><c:out
-								value="${kolDitNseFirst} " /></b></td>
-					<td width="25%" class="tableText"><b><c:out
-								value="${clientFirst} " /></b></td>
-					<td width="15%" class="tableText"><b><c:out
-								value="${kpi}  " /></b></td>
+					<td width="10%" class="tableText"><b><c:out value="${sizeCo}  " /></b></td>
+					<td width="25%" class="tableText"><b><c:out value="${clientNseSize} " /></b></td>
+					<td width="25%" class="tableText"><b><c:out value="${kolDitNseFirst} " /></b></td>
+					<td width="25%" class="tableText"><b><c:out value="${clientFirst} " /></b></td>
+					<td width="15%"class="tableText"><b><c:out value="${kpi}  " /></b></td>
 				</tr>
-
-
+			
+		
 			</table>
-			<br>
-			<br>
-			<p><button id="slide" href="#">Показать детализацию</button></p>
-			<br>
-			<table border="1" width="100%" id="slideTable"  style="display:none">
+	<br><br>
+	<p><button id="slide" href="#">Показать детализацию</button></p>
+	<br>
+			<table border="1" width="100%" id = "slideTable"  style=" display:none">
 				<tr>
 					<td width="10%" class="tablecent"><b><c:out
 								value="Задача " /></b></td>
@@ -132,12 +128,12 @@
 						<td><c:out value="${co.suject}" /></td>
 					</tr>
 				</c:forEach>
+			
 
 
 
+		</div>
 
-				</div>
-
-				</div>
+	</div>
 </body>
 </html>

@@ -16,13 +16,13 @@ import beans.ClientOrderBean;
 import beans.Users;
 import ochesnokov.general.WorkDataBase;
 
-@WebServlet(name = "TestServlet1", urlPatterns = { "/TestServlet1" })
-public class TestServlet extends HttpServlet {
+@WebServlet(name = "Forma19User", urlPatterns = { "/Forma19User" })
+public class Forma19User extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	WorkDataBase wdb = WorkDataBase.getInstance();
 
-	public TestServlet() {
+	public Forma19User() {
 		super();
 		
 	}
