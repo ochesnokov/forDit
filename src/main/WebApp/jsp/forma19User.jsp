@@ -115,7 +115,7 @@
 					
 				<c:forEach items="${manyProducts}" var="mp">
 				
-				<table border="1" width="100%" class = "slideTable" style=" display:none" >
+				<table border="1" width="100%" class ="slideTable" style=" display:none" >
 				<tr><td width="15%"><h2><c:out value="${mp.sysName}" />	</h2></td></tr>
 				<tr>
 					<td width="10%" class="tablecent"><b><c:out
