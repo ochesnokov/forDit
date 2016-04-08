@@ -8,7 +8,7 @@
 <title>forDit</title>
 <meta charset="UTF-8">
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script type="text/javascript" src="js/slide.js"></script>
+<script type="text/javascript" src="JS/slide.js"></script>
 <link href="styles/style.css" rel="stylesheet" type="text/css">
 <script src="main.js"></script>
 </head>
@@ -44,10 +44,12 @@
 				<ul>
 					<li><a href="index.jsp"><i class="icons"
 							style="background: url(images/glavnaya.png) no-repeat"></i>Главная</a></li>
-					<li><a href="TestServlet2" method="POST"><i class="icons" style="background: url(images/novosti.png) no-repeat"></i>Форма 19 (сотрудники)</a></li>
-				<li><a href="Forma19Dit"><i class="icons" style="background: url(images/stati.png) no-repeat"></i>Форма 19 (отдел)</a></li>
-					<li><a href="#"><i class="icons"
-							style="background: url(images/free.png) no-repeat"></i></a></li>
+					<li><a href="Forma19UserStart" method="POST"><i class="icons" 
+							style="background: url(images/novosti.png) no-repeat"></i>Форма 19 (сотрудники)</a></li>
+					<li><a href="Forma19Dit"><i class="icons" 
+							style="background: url(images/stati.png) no-repeat"></i>Форма 19 (отдел)</a></li>
+					<li><a href="PlotnostUserStart"><i class="icons" 
+							style="background: url(images/free.png) no-repeat"></i>Плотность</a></li>
 					<li><a href="#"><i class="icons"
 							style="background: url(images/smeshno.png) no-repeat"></i></a></li>
 					<li><a href="#"><i class="icons"
@@ -65,7 +67,7 @@
 			<div width="1000"><p class="headerP">Форма №19, KPI Эффективность тестирования</p></div>
 			<br>
 
-			<form action="TestServlet1" method="GET">
+			<form action="Forma19User" method="GET">
 				<select size="1" name="thisUser" onchange="">
 					<option selected name="tUser" value="${userId}"><c:out
 							value="${nameUser}" /></option>
@@ -106,30 +108,56 @@
 	<br><br>
 	<p><button id="slide" href="#">Показать детализацию</button></p>
 	<br>
-			<table border="1" width="100%" id = "slideTable"  style=" display:none">
+		
+			
+			
+				
+					
+				<c:forEach items="${manyProducts}" var="mp">
+				
+				<table border="1" width="100%" class = "slideTable" style=" display:none" >
+				<tr><td width="15%"><h2><c:out value="${mp.sysName}" />	</h2></td></tr>
 				<tr>
 					<td width="10%" class="tablecent"><b><c:out
 								value="Задача " /></b></td>
-					<td width="10%" class="tablecent"><b><c:out
-								value="Проект " /></b></td>
-					<td width="10%" class="tablecent"><b><c:out value="Дата " /></b></td>
-					<td width="70%" class="tablecent"><b><c:out
+					
+					<td width="15%" class="tablecent"><b><c:out
+								value="Модуль " /></b></td>
+					<td width="15%" class="tablecent"><b><c:out
+								value="От имени " /></b></td>
+					<td width="10%" class="tablecent"><b><c:out 
+								value="Дата " /></b></td>
+					<td width="50%" class="tablecent"><b><c:out
 								value="Название " /></b></td>
 				</tr>
+				
+				
 				<c:forEach items="${clientOrder}" var="co">
-					<tr>
-						<td><c:out value="${co.id}" /></td>
-						<td><c:out value="${co.projectId}" /></td>
-						<td><fmt:formatDate type="date" value="${co.inDateTime}" /></td>
-						<td><c:out value="${co.suject}" /></td>
-					</tr>
+				
+					<c:if test="${co.productId==mp.id}">
+						<tr>
+							<td><c:out value="${co.id}" /></td>
+							
+							<td><c:out value="${co.moduleName}" /></td>
+							<td><c:out value="${co.onNameString}" /></td>
+							<td><fmt:formatDate type="date" value="${co.inDateTime}" /></td>
+							<td><c:out value="${co.suject}" /></td>
+						</tr>
+					</c:if>
 				</c:forEach>
+				<br>
+				</table>
+				<br>	
+		</c:forEach>
+				
 			
 
+	
+		
 
 
 		</div>
 
-	</div>
+	
 </body>
 </html>
