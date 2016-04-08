@@ -108,30 +108,56 @@
 	<br><br>
 	<p><button id="slide" href="#">Показать детализацию</button></p>
 	<br>
-			<table border="1" width="100%" id = "slideTable"  style=" display:none">
+		
+			
+			
+				
+					
+				<c:forEach items="${manyProducts}" var="mp">
+				
+				<table border="1" width="100%" class = "slideTable" style=" display:none" >
+				<tr><td width="15%"><h2><c:out value="${mp.sysName}" />	</h2></td></tr>
 				<tr>
 					<td width="10%" class="tablecent"><b><c:out
 								value="Задача " /></b></td>
-					<td width="10%" class="tablecent"><b><c:out
-								value="Проект " /></b></td>
-					<td width="10%" class="tablecent"><b><c:out value="Дата " /></b></td>
-					<td width="70%" class="tablecent"><b><c:out
+					
+					<td width="15%" class="tablecent"><b><c:out
+								value="Модуль " /></b></td>
+					<td width="15%" class="tablecent"><b><c:out
+								value="От имени " /></b></td>
+					<td width="10%" class="tablecent"><b><c:out 
+								value="Дата " /></b></td>
+					<td width="50%" class="tablecent"><b><c:out
 								value="Название " /></b></td>
 				</tr>
+				
+				
 				<c:forEach items="${clientOrder}" var="co">
-					<tr>
-						<td><c:out value="${co.id}" /></td>
-						<td><c:out value="${co.projectId}" /></td>
-						<td><fmt:formatDate type="date" value="${co.inDateTime}" /></td>
-						<td><c:out value="${co.suject}" /></td>
-					</tr>
+				
+					<c:if test="${co.productId==mp.id}">
+						<tr>
+							<td><c:out value="${co.id}" /></td>
+							
+							<td><c:out value="${co.moduleName}" /></td>
+							<td><c:out value="${co.onNameString}" /></td>
+							<td><fmt:formatDate type="date" value="${co.inDateTime}" /></td>
+							<td><c:out value="${co.suject}" /></td>
+						</tr>
+					</c:if>
 				</c:forEach>
+				<br>
+				</table>
+				<br>	
+		</c:forEach>
+				
 			
 
+	
+		
 
 
 		</div>
 
-	</div>
+	
 </body>
 </html>

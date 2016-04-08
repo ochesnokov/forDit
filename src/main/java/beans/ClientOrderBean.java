@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "dbo.tClientOrder")
@@ -28,12 +29,27 @@ public class ClientOrderBean {
 
 	@Column(name = "Subject")
 	private String suject;
+	
+	@Column(name = "ProductID")
+	private int productId;
+	
+	@Transient
+	private String productName;
 
 	@Column(name = "ModuleId")
 	private int moduleId;
 
 	@Column(name = "TaskID")
 	private int taskId;
+	
+	@Transient
+	private String task;
+	
+	@Transient
+	private String onNameString;
+	
+	@Transient
+	private String moduleName;
 
 	@Column(name = "InDateTime")
 	private Date inDateTime;
@@ -50,6 +66,8 @@ public class ClientOrderBean {
 	@Column(name = "f_InNameOf")
 	private int onName;
 	
+	
+	
 	@Column(name = "ParentCOID")
 	private long parentCo;
 	
@@ -59,6 +77,45 @@ public class ClientOrderBean {
 	@Column(name = "Status")
 	private int status;
 	
+
+	public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	
+
+	
+
+	
+
+	
+	public String getTask() {
+		return task;
+	}
+
+	public void setTask(String task) {
+		this.task = task;
+	}
+
+	public String getOnNameString() {
+		return onNameString;
+	}
+
+	public void setOnNameString(String onNameString) {
+		this.onNameString = onNameString;
+	}
+
+	public String getModuleName() {
+		return moduleName;
+	}
+
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
+	}
 
 	public int getStatus() {
 		return status;
@@ -171,5 +228,15 @@ public class ClientOrderBean {
 	public void setFlags(int flags) {
 		this.flags = flags;
 	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	
+	
 
 }

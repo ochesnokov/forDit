@@ -6,7 +6,7 @@ $(document).ready(function() {
 
 		{
 
-			$("#slideTable").slideUp();
+			$(".slideTable").slideUp();
 			$("#slide").text("Показать детализацию");
 			flag = !flag;
 
@@ -16,7 +16,7 @@ $(document).ready(function() {
 
 		{
 
-			$("#slideTable").slideDown();
+			$(".slideTable").slideDown();
 			$("#slide").text("Скрыть детализацию");
 			flag = !flag;
 
