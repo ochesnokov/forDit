@@ -10,7 +10,7 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="JS/slide.js"></script>
 <link href="styles/style.css" rel="stylesheet" type="text/css">
-<script src="main.js"></script>
+
 </head>
 <body>
 	<div id="page_align" class="b3radius">
@@ -116,18 +116,22 @@
 				<c:forEach items="${manyProducts}" var="mp">
 				
 				<table border="1" width="100%" class ="slideTable" style=" display:none" >
-				<tr><td width="15%"><h2><c:out value="${mp.sysName}" />	</h2></td></tr>
+				<tr><td></td>
+					<td></td>
+				<td width="10%"><h2><c:out value="${mp.sysName}" />	</h2></td></tr>
 				<tr>
 					<td width="10%" class="tablecent"><b><c:out
 								value="Задача " /></b></td>
 					
 					<td width="15%" class="tablecent"><b><c:out
 								value="Модуль " /></b></td>
+					<td width="20%" class="tablecent"><b><c:out
+								value="Бизнес задача " /></b></td>
 					<td width="15%" class="tablecent"><b><c:out
 								value="От имени " /></b></td>
 					<td width="10%" class="tablecent"><b><c:out 
 								value="Дата " /></b></td>
-					<td width="50%" class="tablecent"><b><c:out
+					<td width="30%" class="tablecent"><b><c:out
 								value="Название " /></b></td>
 				</tr>
 				
@@ -139,6 +143,7 @@
 							<td><c:out value="${co.id}" /></td>
 							
 							<td><c:out value="${co.moduleName}" /></td>
+							<td><c:out value="${co.task}" /></td>
 							<td><c:out value="${co.onNameString}" /></td>
 							<td><fmt:formatDate type="date" value="${co.inDateTime}" /></td>
 							<td><c:out value="${co.suject}" /></td>

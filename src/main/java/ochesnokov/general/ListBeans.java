@@ -3,6 +3,7 @@ package ochesnokov.general;
 import java.util.List;
 
 import beans.Products;
+import beans.Task;
 import beans.Users;
 
 public class ListBeans {
@@ -18,6 +19,12 @@ public class ListBeans {
 	public List<Products> getAllProduct(){
 	 List<Products> AllProduct = wdb.em.createNativeQuery("SELECT * FROM [dbo].[tAppModule]", Products.class).getResultList();
 	 return AllProduct;
-	
 	}
+	
+	public List<Task> getAllTask(){
+		 List<Task> AllTask = wdb.em.createNativeQuery("select * from [dbo].[tAppModuleTask]", Task.class).getResultList();
+		 return AllTask;
+	}
+	
+	
 }
