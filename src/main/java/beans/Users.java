@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "dbo.tCltCltRelation")
@@ -31,7 +32,7 @@ public class Users {
 	@Column(name = "jobTitle")
 	private String jobTitle;
 
-	@Column(name = "email")
+	@Transient
 	private String email;
 
 	@Column(name = "f_ChildClientID")

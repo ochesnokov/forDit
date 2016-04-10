@@ -37,15 +37,13 @@ public class Forma19User extends HttpServlet {
 			throws ServletException, IOException {
 
 		response.setContentType("text/html;charset=UTF-8");
-		// РџРѕР»СѓС‡Р°РµРј РґР°РЅРЅС‹Рµ СЃ JSP
+		// Получаем параметры с jsp страницы
 		String myUserParam = (String) request.getParameter("thisUser");
 		String startDate = request.getParameter("dateStart");
 		String finishDate = request.getParameter("dateFinish");
 
 		int myUser = Integer.parseInt(myUserParam);
 		List<Products> allProducts = lb.getAllProduct();
-		
-		// РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє СЃРѕС‚СЂСѓРґРЅРёРєРѕРІ РёР· jsp
 
 		@SuppressWarnings("unchecked")
 		List<Users> first = wdb.em.createNativeQuery(
@@ -54,16 +52,11 @@ public class Forma19User extends HttpServlet {
 				Users.class).getResultList();
 		List<ClientOrderBean> allNse = new ArrayList<ClientOrderBean>();
 
-		// РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє РѕС€РёР±РѕРє Р”РёС‚ c РєРѕРїРёСЏРјРё
+		// Получаем список всех нсе за указаный период включая копии
 		@SuppressWarnings("unchecked")
-		List<ClientOrderBean> allNseKop = wdb.em.createNativeQuery(
-				"SELECT * FROM [dbo].[tClientOrder] WHERE  [InDateTime] > '" + startDate + "' and  [InDateTime] < '"
-						+ finishDate
-						+ "' and [ClientInstrumentID] = 28 and [Status] !=8 and [TaskID]  IN (SELECT [AppModuleTaskID] from [dbo].[tResponsiblePerson] rp inner JOIN [dbo].[tAppModuleTask] amt ON amt.[AppModuleTaskID] = [rp].[ObjectID] where [rp].[EmployeeID] = "
-						+ myUser + " and [rp].[RoleID] = 3 and [amt].[Status] !=0  and [amt].[Status] != 2)",
-				ClientOrderBean.class).getResultList();
+		List<ClientOrderBean> allNseKop = lb.getAllNseKopFromUser(startDate, finishDate, myUser);
 
-		// РћС‚Р±РёСЂР°РµРј РќРµРѕР±С…РѕРґРёРјС‹Рµ РќРЎР•
+		// отбираем все нсе в состояниях отличных от "отказано" и "есть решение"
 		for (ClientOrderBean cob : allNseKop) {
 			if (cob.getId() == cob.getParentCo() && cob.getStateId() != 359 && cob.getStateId() != 360) {
 				allNse.add(cob);
@@ -73,13 +66,12 @@ public class Forma19User extends HttpServlet {
 		String nameUser = first.get(0).getName();
 		int userId = (int) first.get(0).getId();
 
-		// РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє С‚РµСЃС‚РёСЂРѕРІС‰РёРєРѕРІ Р”РёС‚
+		// Получаем список тестировщиков ДИТ
 		@SuppressWarnings("unchecked")
-		List<Users> users = wdb.em.createNativeQuery(
-				"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE [ccr].[f_DepartmentID] = 944 AND [u].[Flag] = 0 AND [u].[ProfileID] = 1",
-				Users.class).getResultList();
+		List<Users> users = lb.getUsersDit();
 
-		// Р”РѕР±Р°РІР»СЏРµРј РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РїСЂРѕРґСѓРєС‚Р°, РјРѕРґСѓР»СЏ, Рё РїРѕР»СЏ "РѕС‚ РёРјРµРЅРё"
+		// Проставляем текстовые поля "продукт"," модуль ","бизнес задача " и
+		// поле "от имени"
 		for (ClientOrderBean cob : allNse) {
 
 			Products a = wdb.em.find(Products.class, new Long(cob.getProductId()));
@@ -87,18 +79,16 @@ public class Forma19User extends HttpServlet {
 
 			Products b = wdb.em.find(Products.class, new Long(cob.getModuleId()));
 			cob.setModuleName(b.getSysName());
-			
+
 			Task d = wdb.em.find(Task.class, new Long(cob.getTaskId()));
 			cob.setTask(d.getTaskName());
-			
+
 			@SuppressWarnings("unchecked")
 			List<Users> c = wdb.em.createNativeQuery(
 					"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE [ccr].[f_ChildClientID] ="
 							+ cob.getOnName() + " ",
 					Users.class).getResultList();
 			cob.setOnNameString(c.get(0).getName());
-			
-			
 
 		}
 
@@ -108,32 +98,29 @@ public class Forma19User extends HttpServlet {
 				return o1.getProductName().compareTo(o2.getProductName());
 			}
 		});
-		//РџРѕР»СѓС‡РёРј РјРЅРѕР¶РµСЃС‚РІРѕ РїСЂРѕРґСѓРєС‚РѕРІ
+		// Убираем повторяющиеся продукты в списке
 		Set<Integer> manyProducts = new HashSet<Integer>();
-		for(ClientOrderBean an : allNse){
+		for (ClientOrderBean an : allNse) {
 			manyProducts.add(an.getProductId());
 		}
-		
-		
-		
+
 		List<Products> productsForDetail = new ArrayList<Products>();
-		for(Products pr : allProducts){
-			
-			for(Integer mp : manyProducts){
+		for (Products pr : allProducts) {
+
+			for (Integer mp : manyProducts) {
 				int a = mp;
-				if(mp == pr.getId()){
+				if (mp == pr.getId()) {
 					productsForDetail.add(pr);
 				}
 			}
 		}
-		
-		
-		// РєРѕР»Р»РёС‡РµСЃС‚РІРѕ РќСЃРµ
+
+		// Колличество отобранных задач
 		int alNse = allNse.size();
 
-		// РЅР°С…РѕРґРёРј СЃРѕС‚СЂСѓРґРЅРёРєРѕРІ РґРµРїР°СЂС‚Р°РјРµРЅС‚РѕРІ
+		// Массив id всех отделов ДИТ
 		int[] depDit = { 938, 1141, 939, 940, 1961, 2119, 944, 945, 1722, 1723, 1724, 1725, 1727, 1121, 2116, 2118 };
-		
+
 		@SuppressWarnings("unchecked")
 		List<Users> allUser = wdb.em.createNativeQuery(
 				"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE  [f_IsActive] = 2",
@@ -154,7 +141,7 @@ public class Forma19User extends HttpServlet {
 			}
 		});
 
-		// РћС‚Р±РёСЂР°РµРј РєР»РёРµРЅС‚СЃРєРёРµ РЅСЃРµ
+		// Отбираем все клиентские ошибки
 		List<ClientOrderBean> clientNse = new ArrayList<ClientOrderBean>() {
 		};
 		boolean a = false;
@@ -173,15 +160,15 @@ public class Forma19User extends HttpServlet {
 			}
 		}
 
-		// РљРѕР»Р»РёС‡РµСЃС‚РІРѕ РІРЅСѓС‚СЂРµРЅРЅРёС… РѕС€РёР±РѕРє
+		// Колличество внутренних ошибок
 		int ditNseSize = ditNse.size();
 
-		// РљРѕР»Р»РёС‡РµСЃС‚РІРѕ РєР»РёРµРЅС‚СЃРєРёС… РѕС€РёР±РѕРє
+		// Колличество клиентских ошибок
 		int clientNseSize = clientNse.size();
 
-		// РљРѕР»Р»РёС‡РµСЃС‚РІРѕ РІРЅСѓС‚СЂРµРЅРЅРёС… РЅСЃРµ 1 РїСЂРёРѕСЂРёС‚РµС‚Р°
 		int kolDitNseFirst = 0;
-		// РєРѕР»Р»РёС‡РµСЃС‚РІРѕ РІ РѕС‡РєР°С…
+		// Расчитаем сумму ошибок ДИТ
+		// ошибки первого приоритета идут за 4 балла
 		int costDitNse = ditNseSize;
 		for (ClientOrderBean cod : ditNse) {
 			if (cod.getPriority() == 7) {
@@ -190,10 +177,9 @@ public class Forma19User extends HttpServlet {
 			}
 		}
 
-		// РљРѕР»Р»РёС‡РµСЃС‚РІРѕ РІРЅРµС€РЅРёС… РЅСЃРµ 1 РїСЂРёРѕСЂРёС‚РµС‚Р°
-
 		int kolClientNseFirst = 0;
-		// РєРѕР»Р»РёС‡РµСЃС‚РІРѕ РІ РѕС‡РєР°С…
+		// // Расчитаем сумму клиентских ошибок
+		// ошибки первого приоритета идут за 4 балла
 		int costClientNse = clientNseSize;
 		for (ClientOrderBean cod : clientNse) {
 			if (cod.getPriority() == 7) {
@@ -201,10 +187,10 @@ public class Forma19User extends HttpServlet {
 				kolClientNseFirst++;
 			}
 		}
-		// РЎС‡РёС‚Р°РµРј kpi
+
 		double costclientNseDouble = (double) costClientNse;
 		double costDitNseDouble = (double) costDitNse;
-
+		// Считаем KPI
 		double summCostNse = costclientNseDouble + costDitNseDouble;
 		double kpi;
 		if (summCostNse != 0) {
@@ -214,7 +200,6 @@ public class Forma19User extends HttpServlet {
 		}
 		String formattedDouble = new DecimalFormat("#0.00").format(kpi);
 
-		// РѕС‚РїСЂР°РІР»СЏРµРј РґР°РЅРЅС‹Рµ РІ jsp
 		request.setAttribute("userId", userId);
 		request.setAttribute("nameUser", nameUser);
 		request.setAttribute("clientOrder", allNse);
