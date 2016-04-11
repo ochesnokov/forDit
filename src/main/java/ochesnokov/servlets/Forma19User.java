@@ -56,7 +56,7 @@ public class Forma19User extends HttpServlet {
 		// Получаем список ошибок Дит c копиями
 		@SuppressWarnings("unchecked")
 		List<ClientOrderBean> allNseKop = wdb.em.createNativeQuery(
-				"SELECT * FROM [dbo].[tClientOrder] WHERE  [InDateTime] > '" + startDate + "' and  [InDateTime] < '"
+				"SELECT * FROM [dbo].[tClientOrder] WHERE  [InDateTime] >= '" + startDate + "' and  [InDateTime] <= '"
 						+ finishDate
 						+ "' and [ClientInstrumentID] = 28 and [Status] !=8 and [TaskID]  IN (SELECT [AppModuleTaskID] from [dbo].[tResponsiblePerson] rp inner JOIN [dbo].[tAppModuleTask] amt ON amt.[AppModuleTaskID] = [rp].[ObjectID] where [rp].[EmployeeID] = "
 						+ myUser + " and [rp].[RoleID] = 3 and [amt].[Status] !=0  and [amt].[Status] != 2)",
