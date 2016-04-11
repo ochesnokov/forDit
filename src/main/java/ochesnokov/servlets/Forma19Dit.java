@@ -5,7 +5,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,7 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import beans.ClientOrderBean;
+import beans.Products;
+import beans.Task;
 import beans.Users;
+import ochesnokov.general.ListBeans;
 import ochesnokov.general.WorkDataBase;
 
 /**
@@ -24,52 +29,68 @@ import ochesnokov.general.WorkDataBase;
 @WebServlet("/Forma19Dit")
 public class Forma19Dit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-  
+
 	WorkDataBase wdb = WorkDataBase.getInstance();
-	
-    public Forma19Dit() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	ListBeans lb = new ListBeans();
+
+	public Forma19Dit() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 
-		
 		String startDate = request.getParameter("dateStart");
 		String finishDate = request.getParameter("dateFinish");
 
 		// Получаем список тестировщиков дит
-		List<Users> users = wdb.em.createNativeQuery(
-				"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE [ccr].[f_DepartmentID] = 944 AND [u].[Flag] = 0 AND [u].[ProfileID] = 1",
-				Users.class).getResultList();
-
+		List<Users> users = lb.getUsersDit();
+		List<Products> allProducts = lb.getAllProduct();
 		List<ClientOrderBean> allNseKop = new ArrayList<ClientOrderBean>();
 		List<ClientOrderBean> allNseKopTime = new ArrayList<ClientOrderBean>();
-		for(Users user : users){
+
+		// Получаем список ошибок Дит c копиями
+		for (Users user : users) {
 			allNseKopTime.clear();
-			allNseKopTime = wdb.em.createNativeQuery(
-					"SELECT * FROM [dbo].[tClientOrder] WHERE  [InDateTime] > '" + startDate + "' and  [InDateTime] < '"
-							+ finishDate
-							+ "' and [ClientInstrumentID] = 28 and [Status] !=8 and [TaskID]  IN (SELECT [AppModuleTaskID] from [dbo].[tResponsiblePerson] rp inner JOIN [dbo].[tAppModuleTask] amt ON amt.[AppModuleTaskID] = [rp].[ObjectID] where [rp].[EmployeeID] = "
-							+ user.getId() + " and [rp].[RoleID] = 3 and [amt].[Status] !=0  and [amt].[Status] != 2)",
-					ClientOrderBean.class).getResultList();
+			allNseKopTime = lb.getAllNseKopFromUser(startDate, finishDate, (int) user.getId());
 			allNseKop.addAll(allNseKopTime);
 		}
-		
+
 		List<ClientOrderBean> allNse = new ArrayList<ClientOrderBean>();
-		
-		// Получаем список ошибок Дит c копиями
-		
-		for(ClientOrderBean cob : allNseKop){
-			if(cob.getId() == cob.getParentCo() && cob.getStateId() != 359 && cob.getStateId() != 360 ){
+		for (ClientOrderBean cob : allNseKop) {
+			if (cob.getId() == cob.getParentCo() && cob.getStateId() != 359 && cob.getStateId() != 360) {
 				allNse.add(cob);
 			}
 		}
-		
+
+		// Проставляем текстовые поля "продукт"," модуль ","бизнес задача " и
+		// поле "от имени"
+		for (ClientOrderBean cob : allNse) {
+
+			Products a = wdb.em.find(Products.class, new Long(cob.getProductId()));
+			cob.setProductName(a.getSysName());
+
+			Products b = wdb.em.find(Products.class, new Long(cob.getModuleId()));
+			cob.setModuleName(b.getSysName());
+
+			Task d = wdb.em.find(Task.class, new Long(cob.getTaskId()));
+			cob.setTask(d.getTaskName());
+
+			@SuppressWarnings("unchecked")
+			List<Users> c = wdb.em.createNativeQuery(
+					"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE [ccr].[f_ChildClientID] ="
+							+ cob.getOnName() + " ",
+					Users.class).getResultList();
+			cob.setOnNameString(c.get(0).getName());
+
+		}
+
 		Collections.sort(allNse, new Comparator<ClientOrderBean>() {
 			public int compare(ClientOrderBean o1, ClientOrderBean o2) {
 
@@ -79,13 +100,11 @@ public class Forma19Dit extends HttpServlet {
 
 		// колличество Нсе
 		int alNse = allNse.size();
-		
+
 		// находим сотрудников департаментов
 		int[] depDit = { 938, 1141, 939, 940, 1961, 2119, 944, 945, 1722, 1723, 1724, 1725, 1727, 1121, 2116, 2118 };
-		
-		List<Users> allUser = wdb.em.createNativeQuery(
-				"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE  [f_IsActive] = 2",
-				Users.class).getResultList();
+
+		List<Users> allUser = lb.getAllUser();
 		List<Users> userDit = new ArrayList<Users>();
 
 		for (Users us : allUser) {
@@ -102,7 +121,22 @@ public class Forma19Dit extends HttpServlet {
 			}
 		});
 
-		//Отбираем клиентские нсе
+		Set<Integer> manyProducts = new HashSet<Integer>();
+		for (ClientOrderBean an : allNse) {
+			manyProducts.add(an.getProductId());
+		}
+
+		List<Products> productsForDetail = new ArrayList<Products>();
+		for (Products pr : allProducts) {
+
+			for (Integer mp : manyProducts) {
+				int a = mp;
+				if (mp == pr.getId()) {
+					productsForDetail.add(pr);
+				}
+			}
+		}
+		// Отбираем клиентские нсе
 		List<ClientOrderBean> clientNse = new ArrayList<ClientOrderBean>() {
 		};
 		boolean a = false;
@@ -162,7 +196,6 @@ public class Forma19Dit extends HttpServlet {
 		}
 		String formattedDouble = new DecimalFormat("#0.00").format(kpi);
 
-		
 		request.setAttribute("clientOrder", allNse);
 		request.setAttribute("sizeCo", alNse);
 		request.setAttribute("users", users);
@@ -172,7 +205,8 @@ public class Forma19Dit extends HttpServlet {
 		request.setAttribute("clientNseSize", clientNseSize);
 		request.setAttribute("kolDitNseFirst", kolDitNseFirst);
 		request.setAttribute("kpi", formattedDouble);
-
+		request.setAttribute("manyProducts", productsForDetail);
+		
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/forma19Dit.jsp");
 		if (dispatcher != null) {
 
@@ -180,9 +214,10 @@ public class Forma19Dit extends HttpServlet {
 
 		}
 
-		
 	}
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

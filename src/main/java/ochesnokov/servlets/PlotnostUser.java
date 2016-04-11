@@ -1,6 +1,7 @@
 package ochesnokov.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -10,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import beans.ClientOrderBean;
+import beans.TimeSheet;
+import ochesnokov.general.ListBeans;
 import ochesnokov.general.WorkDataBase;
 
 /**
@@ -19,7 +22,7 @@ import ochesnokov.general.WorkDataBase;
 public class PlotnostUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	WorkDataBase wdb = WorkDataBase.getInstance();  
-    
+    ListBeans lb = new ListBeans();
     public PlotnostUser() {
         super();
         // TODO Auto-generated constructor stub
@@ -35,18 +38,30 @@ public class PlotnostUser extends HttpServlet {
 		String finishDate = request.getParameter("dateFinish");
 
 		int myUser = Integer.parseInt(myUserParam);
+
+		// Все списания на бизнесс задачи в которых ответственный myUser
+		List<TimeSheet> allTimeSheet = lb.getAllTimeSheet(startDate, finishDate, myUser);
 		
-		List<ClientOrderBean> allClientOrder = wdb.em.createNativeQuery(
-				"SELECT * FROM [dbo].[tClientOrder] WHERE  [InDateTime] > '" + startDate + "' and  [InDateTime] < '"
-						+ finishDate
-						+ "' and [ClientInstrumentID] != 19  and [TaskID]  IN (SELECT [AppModuleTaskID] from [dbo].[tResponsiblePerson] rp inner JOIN [dbo].[tAppModuleTask] amt ON amt.[AppModuleTaskID] = [rp].[ObjectID] where [rp].[EmployeeID] = "
-						+ myUser + " and [rp].[RoleID] = 3 and [amt].[Status] !=0  and [amt].[Status] != 2)",
-				ClientOrderBean.class).getResultList();
+		// Списания тестировщика с типами рабты "тестирование", "Верификация", "Воспроизведение ошибки"
+		List<TimeSheet> testerTimeSheet = new ArrayList<TimeSheet>();
+		for(TimeSheet ts : allTimeSheet){
+			if((int)ts.getUserId() == myUser ){
+				if(ts.getTaskType() == 11 || ts.getTaskType() == 17 || ts.getTaskType() == 93){
+					testerTimeSheet.add(ts);
+				}
+			}
+		}
+		//сумма списаний тестировщика
+		double sumTaskSheetTester = 0;
+		for(TimeSheet ts : testerTimeSheet){
+			sumTaskSheetTester += ts.getWorkTime();
+		}
 		
 		
 		
 		
 		
+
 	}
 
 	

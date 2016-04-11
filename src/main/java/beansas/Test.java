@@ -8,27 +8,27 @@ import javax.persistence.Persistence;
 import beans.ClientOrderBean;
 import beans.Period;
 import beans.Products;
+import beans.TimeSheet;
 import beans.Users;
+import ochesnokov.general.ListBeans;
 import ochesnokov.general.WorkDataBase;
 
 public class Test {
 public static void main(String[] args){
-	WorkDataBase wdb = WorkDataBase.getInstance();
-	long a = new Long(2000000);
-	ClientOrderBean cob = wdb.em.find(ClientOrderBean.class, a);
-	 long b = new Long(555);
-	Products c = wdb.em.find(Products.class, b);
-	cob.setProductName(c.getSysName());
+	ListBeans lb = new ListBeans();
+	List<TimeSheet> ts = lb.getAllTimeSheet("20160401", "20160410", 22804);
+	for(TimeSheet tsi : ts){
+	System.out.println(tsi.getClientOrderId());
 	
-	System.out.println(cob.getProductName());
-	Integer aa = 1;
-	int bb = aa;
-	long cc = 1;
-	if(cc == bb){
-		System.out.println("да");
-	} else{
-		System.out.println("нет");
 	}
-
+	WorkDataBase wdb = WorkDataBase.getInstance();
+	
+	System.out.println(ts.size());
+	
+	double sumUserTimeSheet = 0;
+	for(TimeSheet tsi : ts){
+		sumUserTimeSheet += tsi.getWorkTime();
+	}
+	System.out.println(sumUserTimeSheet);
 }
 }
