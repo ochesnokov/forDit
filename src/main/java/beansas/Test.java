@@ -1,5 +1,6 @@
 package beansas;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -16,19 +17,14 @@ import ochesnokov.general.WorkDataBase;
 public class Test {
 public static void main(String[] args){
 	ListBeans lb = new ListBeans();
-	List<TimeSheet> ts = lb.getAllTimeSheet("20160401", "20160410", 22804);
-	for(TimeSheet tsi : ts){
-	System.out.println(tsi.getClientOrderId());
+	int[] departmentsDevelop = {940, 1961, 2119};
 	
+	List<Users> developersDit = new ArrayList<Users>();
+	for(int i = 0; i < departmentsDevelop.length; i++){
+		developersDit.addAll((lb.getUsersDit(departmentsDevelop[i])));
 	}
-	WorkDataBase wdb = WorkDataBase.getInstance();
-	
-	System.out.println(ts.size());
-	
-	double sumUserTimeSheet = 0;
-	for(TimeSheet tsi : ts){
-		sumUserTimeSheet += tsi.getWorkTime();
+	for(Users us : developersDit){
+	System.out.println(us.getName());
 	}
-	System.out.println(sumUserTimeSheet);
 }
 }

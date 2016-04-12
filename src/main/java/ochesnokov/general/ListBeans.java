@@ -37,10 +37,11 @@ public class ListBeans {
 
 	// метод позволяет получить список тестировщиков ДИТ
 
-	public List<Users> getUsersDit() {
+	public List<Users> getUsersDit(int department) {
 		@SuppressWarnings("unchecked")
+		
 		List<Users> users = wdb.em.createNativeQuery(
-				"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE [ccr].[f_DepartmentID] = 944 AND [u].[Flag] = 0 AND [u].[ProfileID] = 1",
+				"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE [ccr].[f_DepartmentID] = " + department + " AND [f_IsActive] = 2",
 				Users.class).getResultList();
 		return users;
 	}
@@ -70,4 +71,9 @@ public class ListBeans {
 				TimeSheet.class).getResultList();
 		return allTimeSheet;
 	}
+	
+	
+	
+	
+	
 }

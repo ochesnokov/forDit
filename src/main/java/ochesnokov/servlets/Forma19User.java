@@ -54,21 +54,15 @@ public class Forma19User extends HttpServlet {
 
 		// Получаем список всех нсе за указаный период включая копии
 		@SuppressWarnings("unchecked")
-<<<<<<< .mine
-		List<ClientOrderBean> allNseKop = wdb.em.createNativeQuery(
-				"SELECT * FROM [dbo].[tClientOrder] WHERE  [InDateTime] >= '" + startDate + "' and  [InDateTime] <= '"
-						+ finishDate
-						+ "' and [ClientInstrumentID] = 28 and [Status] !=8 and [TaskID]  IN (SELECT [AppModuleTaskID] from [dbo].[tResponsiblePerson] rp inner JOIN [dbo].[tAppModuleTask] amt ON amt.[AppModuleTaskID] = [rp].[ObjectID] where [rp].[EmployeeID] = "
-						+ myUser + " and [rp].[RoleID] = 3 and [amt].[Status] !=0  and [amt].[Status] != 2)",
-				ClientOrderBean.class).getResultList();
-=======
+
+
 		List<ClientOrderBean> allNseKop = lb.getAllNseKopFromUser(startDate, finishDate, myUser);
 
 
 
 
 
->>>>>>> .theirs
+
 
 		// отбираем все нсе в состояниях отличных от "отказано" и "есть решение"
 		for (ClientOrderBean cob : allNseKop) {
@@ -82,7 +76,7 @@ public class Forma19User extends HttpServlet {
 
 		// Получаем список тестировщиков ДИТ
 		@SuppressWarnings("unchecked")
-		List<Users> users = lb.getUsersDit();
+		List<Users> users = lb.getUsersDit(944);
 
 		// Проставляем текстовые поля "продукт"," модуль ","бизнес задача " и
 		// поле "от имени"

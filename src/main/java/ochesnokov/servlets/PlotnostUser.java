@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import beans.ClientOrderBean;
 import beans.TimeSheet;
+import beans.Users;
 import ochesnokov.general.ListBeans;
 import ochesnokov.general.WorkDataBase;
 
@@ -55,6 +56,32 @@ public class PlotnostUser extends HttpServlet {
 		double sumTaskSheetTester = 0;
 		for(TimeSheet ts : testerTimeSheet){
 			sumTaskSheetTester += ts.getWorkTime();
+		}
+		
+		// список департаментов разработчиков
+		int[] departmentsDevelop = {940, 1961, 2119};
+		
+		// отбираем всех разработчиков ДИТ
+		List<Users> developersDit = new ArrayList<Users>();
+		for(int i = 0; i < departmentsDevelop.length; i++){
+			developersDit.addAll((lb.getUsersDit(departmentsDevelop[i])));
+		}
+		//отбираем списания разработчиков с типом разработка
+		List<TimeSheet> developersTimeSheet = new ArrayList<TimeSheet>();
+		
+		for(Users dd : developersDit){
+			for(TimeSheet ts : allTimeSheet){
+				if((int)ts.getUserId() == dd.getUser() ){
+					if(ts.getTaskType() == 1){
+						developersTimeSheet.add(ts);
+					}
+				}
+			}
+		}
+		//сумма списаний разработчиков
+		double sumTaskSheetDevelopers = 0;
+		for(TimeSheet ts : developersTimeSheet){
+			sumTaskSheetDevelopers += ts.getWorkTime();
 		}
 		
 		

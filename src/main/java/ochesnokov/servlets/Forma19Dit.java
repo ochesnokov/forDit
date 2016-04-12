@@ -50,7 +50,7 @@ public class Forma19Dit extends HttpServlet {
 		String finishDate = request.getParameter("dateFinish");
 
 		// Получаем список тестировщиков дит
-		List<Users> users = lb.getUsersDit();
+		List<Users> users = lb.getUsersDit(944);
 		List<Products> allProducts = lb.getAllProduct();
 		List<ClientOrderBean> allNseKop = new ArrayList<ClientOrderBean>();
 		List<ClientOrderBean> allNseKopTime = new ArrayList<ClientOrderBean>();
