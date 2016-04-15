@@ -31,7 +31,7 @@ public class TimeSheet {
 	@Column(name = "ClientOrderID")
 	private int clientOrderId;
 	
-	@Column(name = "TaskTipeID")
+	@Column(name = "TaskTypeID")
 	private int taskType;
 
 	

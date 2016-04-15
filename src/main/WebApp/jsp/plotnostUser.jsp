@@ -84,56 +84,43 @@
 			</form>
 			
 			<br>
-			
-			
+
+
 			<table border="1" width="100%">
 				<tr>
 					<td width="10%" class="tablecent"><b><c:out
-								value="Всего ошибок " /></b></td>
+								value="ошибки " /></b></td>
 					<td width="25%" class="tablecent"><b><c:out
-								value="Количество внешних ошибок " /></b></td>
-					<td width="25%" class="tablecent"><b><c:out value="Количество ошибок 1 приоритета " /></b></td>
-					<td width="25%" class="tablecent"><b><c:out value="Количество внешних ошибок 1 приоритета " /></b></td>
+								value="списания раб " /></b></td>
+					<td width="25%" class="tablecent"><b><c:out
+								value="списания тест " /></b></td>
+					<td width="25%" class="tablecent"><b><c:out
+								value="плотность " /></b></td>
 					<td width="15%" class="tablecent"><b><c:out
 								value="KPI тестирования " /></b></td>
 				</tr>
 				<tr>
-					<td width="10%" class="tableText"><b><c:out value="${sizeCo}  " /></b></td>
-					<td width="25%" class="tableText"><b><c:out value="${clientNseSize} " /></b></td>
-					<td width="25%" class="tableText"><b><c:out value="${kolDitNseFirst} " /></b></td>
-					<td width="25%" class="tableText"><b><c:out value="${clientFirst} " /></b></td>
-					<td width="15%"class="tableText"><b><c:out value="${kpi}  " /></b></td>
+					<td width="10%" class="tableText"><b><c:out
+								value="${clientNseSize}  " /></b></td>
+					<td width="25%" class="tableText"><b><c:out
+								value="${sumTaskSheetDevelopers} " /></b></td>
+					<td width="25%" class="tableText"><b><c:out
+								value="${sumTaskSheetTester} " /></b></td>
+					<td width="25%" class="tableText"><b><c:out
+								value="${plotnost} " /></b></td>
+					<td width="15%" class="tableText"><b><c:out
+								value=" " /></b></td>
 				</tr>
-			
-		
+
+
 			</table>
-	<br><br>
-	<p><button id="slide" href="#">Показать детализацию</button></p>
-	<br>
-			<table border="1" width="100%" class = "slideTable"  style=" display:none">
-				<tr>
-					<td width="10%" class="tablecent"><b><c:out
-								value="Задача " /></b></td>
-					<td width="10%" class="tablecent"><b><c:out
-								value="Проект " /></b></td>
-					<td width="10%" class="tablecent"><b><c:out value="Дата " /></b></td>
-					<td width="70%" class="tablecent"><b><c:out
-								value="Название " /></b></td>
-				</tr>
-				<c:forEach items="${clientOrder}" var="co">
-					<tr>
-						<td><c:out value="${co.id}" /></td>
-						<td><c:out value="${co.projectId}" /></td>
-						<td><fmt:formatDate type="date" value="${co.inDateTime}" /></td>
-						<td><c:out value="${co.suject}" /></td>
-					</tr>
-				</c:forEach>
-			
+
+
+
+
 
 
 
 		</div>
-
-	</div>
 </body>
 </html>

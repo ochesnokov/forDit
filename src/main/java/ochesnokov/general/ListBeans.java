@@ -51,10 +51,10 @@ public class ListBeans {
 	@SuppressWarnings("unchecked")
 	public List<ClientOrderBean> getAllNseKopFromUser(String startDate, String finishDate, int myUser) {
 		List<ClientOrderBean> allNseKop = wdb.em.createNativeQuery(
-				"SELECT * FROM [dbo].[tClientOrder] WHERE  [InDateTime] > '" + startDate + "' and  [InDateTime] < '"
+				"SELECT * FROM [dbo].[tClientOrder] WHERE  [InDateTime] >= '" + startDate + "' and  [InDateTime] <= '"
 						+ finishDate
 						+ "' and [ClientInstrumentID] = 28 and [Status] !=8 and [TaskID]  IN (SELECT [AppModuleTaskID] from [dbo].[tResponsiblePerson] rp inner JOIN [dbo].[tAppModuleTask] amt ON amt.[AppModuleTaskID] = [rp].[ObjectID] where [rp].[EmployeeID] = "
-						+ myUser + " and [rp].[RoleID] = 3 and [amt].[Status] !=0  and [amt].[Status] != 2)",
+						+ myUser + " and [rp].[RoleID] = 3)",
 				ClientOrderBean.class).getResultList();
 		return allNseKop;
 	}
@@ -64,7 +64,7 @@ public class ListBeans {
 		@SuppressWarnings("unchecked")
 		List<TimeSheet> allTimeSheet = wdb.em.createNativeQuery(
 				"select * from [dbo].[tTimeSheet] where [DateIn] >= '" + startDate + "' and  [DateIn] <= '" + finishDate
-						+ " and [ClientOrderID] IN (SELECT [ClientOrderID] FROM [dbo].[tClientOrder] WHERE"
+						+ "' and [ClientOrderID] IN (SELECT [ClientOrderID] FROM [dbo].[tClientOrder] WHERE"
 						+ " [ClientInstrumentID] != 19  and [TaskID]  IN (SELECT [AppModuleTaskID] from "
 						+ "[dbo].[tResponsiblePerson] rp inner JOIN [dbo].[tAppModuleTask] amt ON amt.[AppModuleTaskID] = [rp].[ObjectID] where [rp].[EmployeeID] = "
 						+ myUser + " and [rp].[RoleID] = 3 ))",
