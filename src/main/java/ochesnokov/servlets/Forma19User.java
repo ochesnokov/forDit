@@ -42,6 +42,9 @@ public class Forma19User extends HttpServlet {
 		String startDate = request.getParameter("dateStart");
 		String finishDate = request.getParameter("dateFinish");
 
+		System.out.println(startDate);
+		System.out.println(finishDate);
+
 		int myUser = Integer.parseInt(myUserParam);
 		List<Products> allProducts = lb.getAllProduct();
 
@@ -53,16 +56,8 @@ public class Forma19User extends HttpServlet {
 		List<ClientOrderBean> allNse = new ArrayList<ClientOrderBean>();
 
 		// Получаем список всех нсе за указаный период включая копии
-		@SuppressWarnings("unchecked")
-
 
 		List<ClientOrderBean> allNseKop = lb.getAllNseKopFromUser(startDate, finishDate, myUser);
-
-
-
-
-
-
 
 		// отбираем все нсе в состояниях отличных от "отказано" и "есть решение"
 		for (ClientOrderBean cob : allNseKop) {
@@ -75,7 +70,7 @@ public class Forma19User extends HttpServlet {
 		int userId = (int) first.get(0).getId();
 
 		// Получаем список тестировщиков ДИТ
-		@SuppressWarnings("unchecked")
+
 		List<Users> users = lb.getUsersDit(944);
 
 		// Проставляем текстовые поля "продукт"," модуль ","бизнес задача " и
@@ -116,7 +111,7 @@ public class Forma19User extends HttpServlet {
 		for (Products pr : allProducts) {
 
 			for (Integer mp : manyProducts) {
-				int a = mp;
+
 				if (mp == pr.getId()) {
 					productsForDetail.add(pr);
 				}

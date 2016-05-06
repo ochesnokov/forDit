@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -14,7 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import beans.AllPeriods;
 import beans.ClientOrderBean;
+import beans.Periods;
 import beans.TimeSheet;
 import beans.Users;
 import ochesnokov.general.ListBeans;
@@ -28,6 +31,10 @@ public class PlotnostUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	WorkDataBase wdb = WorkDataBase.getInstance();
 	ListBeans lb = new ListBeans();
+	String startDate;
+	String finishDate;
+
+	AllPeriods allPeriods = new AllPeriods();
 
 	public PlotnostUser() {
 		super();
@@ -40,10 +47,34 @@ public class PlotnostUser extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 
 		String myUserParam = (String) request.getParameter("thisUser");
-		String startDate = request.getParameter("dateStart");
-		String finishDate = request.getParameter("dateFinish");
+		String periodId = (String) request.getParameter("thisPeriod");
+		String inPlotnost = (String) request.getParameter("inPlotnost");
+		inPlotnost = inPlotnost.replace(',', '.');
 
+		double lastPlotnost = 0;
+
+		if (!inPlotnost.isEmpty()) {
+			lastPlotnost = Double.parseDouble(inPlotnost);
+		}
 		int myUser = Integer.parseInt(myUserParam);
+		int myPeriod = Integer.parseInt(periodId);
+		String periodName = "";
+
+		List<Periods> periods = allPeriods.getAllPeriods();
+		for (Periods p : periods) {
+			if (p.getId() == myPeriod) {
+				startDate = p.getStartPeriod();
+				finishDate = p.getFinishPeriod();
+				periodName = p.getName();
+			}
+		}
+
+		@SuppressWarnings("unchecked")
+		List<Users> first = wdb.em.createNativeQuery(
+				"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE [ccr].[CltCltRelationID] ="
+						+ myUser + " ",
+				Users.class).getResultList();
+		String nameUser = first.get(0).getName();
 
 		// Все списания на бизнесс задачи в которых ответственный myUser
 		List<TimeSheet> allTimeSheet = lb.getAllTimeSheet(startDate, finishDate, myUser);
@@ -61,6 +92,7 @@ public class PlotnostUser extends HttpServlet {
 		// сумма списаний тестировщика
 
 		double sumTaskSheetTester = 0;
+
 		for (TimeSheet ts : testerTimeSheet) {
 			sumTaskSheetTester += ts.getWorkTime();
 		}
@@ -70,20 +102,31 @@ public class PlotnostUser extends HttpServlet {
 
 		// отбираем всех разработчиков ДИТ
 		List<Users> developersDit = new ArrayList<Users>();
+
 		for (int i = 0; i < departmentsDevelop.length; i++) {
 			developersDit.addAll((lb.getUsersDit(departmentsDevelop[i])));
 		}
+
 		// отбираем списания разработчиков с типом разработка
 		List<TimeSheet> developersTimeSheet = new ArrayList<TimeSheet>();
 
 		for (Users dd : developersDit) {
 			for (TimeSheet ts : allTimeSheet) {
 				if ((int) ts.getUserId() == (int) dd.getId()) {
-					if (ts.getTaskType() == 1) {
-						developersTimeSheet.add(ts);
-					}
+
+					developersTimeSheet.add(ts);
+
 				}
 			}
+		}
+
+		for (TimeSheet ts : developersTimeSheet) {
+			for (Users us : developersDit) {
+				if (ts.getUserId() == us.getId()) {
+					ts.setName(us.getName());
+				}
+			}
+
 		}
 		// сумма списаний разработчиков
 
@@ -151,17 +194,38 @@ public class PlotnostUser extends HttpServlet {
 
 		double plotnost = ((double) clientNseSize) / (sumTaskSheetDevelopers - sumTaskSheetTester);
 
-		String plotnostString = new DecimalFormat("#0.00").format(plotnost);
+		double result = 0;
+		if (lastPlotnost != 0) {
+			result = 100 * (lastPlotnost - plotnost) / lastPlotnost;
+		}
+
+		String resultString = new DecimalFormat("#0.00").format(result) + "%";
+		String plotnostString = String.format("%.4f", plotnost);
 		String sumTaskSheetDevelopersString = new DecimalFormat("#0.00").format(sumTaskSheetDevelopers);
 		String sumTaskSheetTesterString = new DecimalFormat("#0.00").format(sumTaskSheetTester);
 
+		List<Users> users = wdb.em.createNativeQuery(
+				"select * FROM [dbo].[tCltCltRelation] ccr inner JOIN [dbo].[tUser] u ON [u].[UserID] = [ccr].[f_UserID] WHERE [ccr].[f_DepartmentID] = 944 AND [u].[Flag] = 0 AND [u].[ProfileID] = 1",
+				Users.class).getResultList();
+		int userId = (int) first.get(0).getId();
+
+		request.setAttribute("users", users);
+		request.setAttribute("userId", userId);
 		request.setAttribute("clientOrder", allNse);
-		request.setAttribute("dateStart", startDate);
-		request.setAttribute("dateFinish", finishDate);
+		request.setAttribute("periodId", periodId);
+		request.setAttribute("periodName", periodName);
 		request.setAttribute("clientNseSize", clientNseSize);
 		request.setAttribute("plotnost", plotnostString);
 		request.setAttribute("sumTaskSheetTester", sumTaskSheetTesterString);
 		request.setAttribute("sumTaskSheetDevelopers", sumTaskSheetDevelopersString);
+		request.setAttribute("nameUser", nameUser);
+		request.setAttribute("periods", periods);
+		request.setAttribute("result", resultString);
+		request.setAttribute("lastPlotnost", lastPlotnost);
+
+		request.setAttribute("testerTimeSheet", testerTimeSheet);
+		request.setAttribute("developersTimeSheet", developersTimeSheet);
+
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/plotnostUser.jsp");
 		if (dispatcher != null) {
 

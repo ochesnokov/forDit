@@ -11,7 +11,7 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="JS/slide.js"></script>
 <link href="styles/style.css" rel="stylesheet" type="text/css">
-<script src="main.js"></script>
+<script src="JS/main.js"></script>
 </head>
 <body>
 	<div id="page_align" class="b3radius">
@@ -49,7 +49,7 @@
 							class="icons"
 							style="background: url(images/novosti.png) no-repeat"></i>Форма
 							19 (сотрудники)</a></li>
-					<li><a href="Forma19Dit"><i class="icons"
+					<li><a href="Forma19DitStart"><i class="icons"
 							style="background: url(images/stati.png) no-repeat"></i>Форма 19
 							(отдел)</a></li>
 					<li><a href="PlotnostUserStart"><i class="icons"

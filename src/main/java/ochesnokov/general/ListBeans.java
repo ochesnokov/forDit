@@ -48,12 +48,13 @@ public class ListBeans {
 
 	// метод позволяет получить список всех нсе за указаный период включая копии
 	// по id сотрудника
+	//исключаем ошибки проливки
 	@SuppressWarnings("unchecked")
 	public List<ClientOrderBean> getAllNseKopFromUser(String startDate, String finishDate, int myUser) {
 		List<ClientOrderBean> allNseKop = wdb.em.createNativeQuery(
 				"SELECT * FROM [dbo].[tClientOrder] WHERE  [InDateTime] >= '" + startDate + "' and  [InDateTime] <= '"
 						+ finishDate
-						+ "' and [ClientInstrumentID] = 28 and [Status] !=8 and [TaskID]  IN (SELECT [AppModuleTaskID] from [dbo].[tResponsiblePerson] rp inner JOIN [dbo].[tAppModuleTask] amt ON amt.[AppModuleTaskID] = [rp].[ObjectID] where [rp].[EmployeeID] = "
+						+ "' and [ClientInstrumentID] = 28 and [Status] !=8 and [TypeErrorID] != 5 and [TaskID]  IN (SELECT [AppModuleTaskID] from [dbo].[tResponsiblePerson] rp inner JOIN [dbo].[tAppModuleTask] amt ON amt.[AppModuleTaskID] = [rp].[ObjectID] where [rp].[EmployeeID] = "
 						+ myUser + " and [rp].[RoleID] = 3)",
 				ClientOrderBean.class).getResultList();
 		return allNseKop;
@@ -69,6 +70,7 @@ public class ListBeans {
 						+ "[dbo].[tResponsiblePerson] rp inner JOIN [dbo].[tAppModuleTask] amt ON amt.[AppModuleTaskID] = [rp].[ObjectID] where [rp].[EmployeeID] = "
 						+ myUser + " and [rp].[RoleID] = 3 ))",
 				TimeSheet.class).getResultList();
+		
 		return allTimeSheet;
 	}
 	

@@ -62,6 +62,7 @@ public class Forma19Dit extends HttpServlet {
 			allNseKop.addAll(allNseKopTime);
 		}
 
+		// Выкидываем идентичные задачи, а также задачи в состояниях есть решение, и отказано 
 		List<ClientOrderBean> allNse = new ArrayList<ClientOrderBean>();
 		for (ClientOrderBean cob : allNseKop) {
 			if (cob.getId() == cob.getParentCo() && cob.getStateId() != 359 && cob.getStateId() != 360) {

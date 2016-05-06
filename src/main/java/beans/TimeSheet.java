@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="dbo.tTimeSheet")
@@ -34,6 +35,8 @@ public class TimeSheet {
 	@Column(name = "TaskTypeID")
 	private int taskType;
 
+	@Transient
+	private String name;
 	
 	
 	public long getId() {
@@ -93,6 +96,16 @@ public class TimeSheet {
 
 	public void setTaskType(int taskType) {
 		this.taskType = taskType;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	

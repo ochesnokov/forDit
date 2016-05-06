@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import beans.Period;
+import beans.AllPeriods;
+
+import beans.Periods;
 import beans.Users;
 import ochesnokov.general.WorkDataBase;
 
@@ -21,6 +23,8 @@ import ochesnokov.general.WorkDataBase;
 public class PlotnostUserStart extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	WorkDataBase wdb = WorkDataBase.getInstance();
+	AllPeriods allPeriods = new AllPeriods();
+	
     public PlotnostUserStart() {
         super();
         // TODO Auto-generated constructor stub
@@ -38,8 +42,10 @@ public class PlotnostUserStart extends HttpServlet {
 		
 		
 		
-		List<Period> periods = wdb.em.createNativeQuery("SELECT * FROM [dbo].[tObjectivePeriod] WHERE [IsQuarter] = 1 and [PeriodStartDate] > '20150101'  ORDER BY [ObjectivePeriodID]", Period.class).getResultList();
+		List<Periods> periods =  allPeriods.getAllPeriods();
 
+		
+		
 		request.setAttribute("periods", periods);
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/plotnostUser.jsp");
 		if (dispatcher != null) {

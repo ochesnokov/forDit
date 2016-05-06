@@ -46,7 +46,7 @@
 							style="background: url(images/glavnaya.png) no-repeat"></i>Главная</a></li>
 					<li><a href="Forma19UserStart" method="POST"><i class="icons" 
 							style="background: url(images/novosti.png) no-repeat"></i>Форма 19 (сотрудники)</a></li>
-					<li><a href="Forma19Dit"><i class="icons" 
+					<li><a href="Forma19DitStart"><i class="icons" 
 							style="background: url(images/stati.png) no-repeat"></i>Форма 19 (отдел)</a></li>
 					<li><a href="PlotnostUserStart"><i class="icons" 
 							style="background: url(images/free.png) no-repeat"></i>Плотность</a></li>
